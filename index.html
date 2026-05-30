@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🏆 CL-Finale Live-Tippspiel</title>
+    <!-- Firebase SDKs laden -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <style>
@@ -84,6 +85,7 @@
     <div class="container">
         <h1>🏆 CL-Tippspiel Live-Tabelle</h1>
 
+        <!-- LIVE CONTROL PANEL -->
         <div class="admin-panel">
             <div class="panel-title">⚡ Live Spielstand eintragen (Synchronisiert)</div>
             <div class="score-control-row">
@@ -111,6 +113,7 @@
             </div>
         </div>
 
+        <!-- LEADERBOARD TABELLE -->
         <div class="leaderboard">
             <div class="table-header">
                 <div>Rang</div><div>Name</div><div>Tipp</div><div>Minute</div><div>Status</div>
@@ -120,15 +123,15 @@
     </div>
 
     <script>
-        // !!! HIER DEINE FIREBASE KONFIGURATION EINTRAGEN (SIEH SCHRITT 2) !!!
+        // Eure Firebase Konfiguration aus image_2ef061.png
         const firebaseConfig = {
-            apiKey: "HIER_DEIN_API_KEY",
-            authDomain: "HIER_PROJEKT.firebaseapp.com",
-            databaseURL: "https://HIER_PROJEKT-default-rtdb.firebaseio.com",
-            projectId: "HIER_PROJEKT",
-            storageBucket: "HIER_PROJEKT.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456:web:abcdef"
+            apiKey: "AIzaSyCsQN06ygiNr6EIO522Yszyc2WvA53PWA",
+            authDomain: "cl-finale.firebaseapp.com",
+            databaseURL: "https://cl-finale-default-rtdb.firebaseio.com",
+            projectId: "cl-finale",
+            storageBucket: "cl-finale.firebasestorage.app",
+            messagingSenderId: "640980759908",
+            appId: "1:640980759908:web:2e6544664f7f7198073671"
         };
         
         // Firebase initialisieren
@@ -149,7 +152,7 @@
         let liveAway = 0;
         let actualMinute = null;
 
-        // Datenbank-Listener: Sobald sich in der Cloud was ändert, updatet sich das Handy automatisch!
+        // Echtzeit-Listener: Lauscht auf Änderungen in der Cloud
         database.ref('matchState').on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -157,7 +160,6 @@
                 liveAway = data.awayScore || 0;
                 actualMinute = data.goalMinute !== undefined ? data.goalMinute : null;
                 
-                // Oberfläche aktualisieren
                 document.getElementById('live-home').innerText = liveHome;
                 document.getElementById('live-away').innerText = liveAway;
                 document.getElementById('goal-minute').value = actualMinute !== null ? actualMinute : "";
@@ -172,7 +174,6 @@
             } else {
                 liveAway = Math.max(0, liveAway + val);
             }
-            // In die Cloud hochladen
             database.ref('matchState').update({
                 homeScore: liveHome,
                 awayScore: liveAway
